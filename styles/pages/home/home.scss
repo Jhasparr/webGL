@@ -1,0 +1,74 @@
+.home {
+    @extend %cover;
+    @extend %center;
+
+    background: $color-contessa;
+    color: $color-quarter-spanish-white;
+    text-align: center;
+    overflow: hidden;
+
+    &:before,
+    &:after {
+        content: '';
+        height: 24rem;
+        width: 100%;
+        left: 0;
+        position: absolute;
+     
+        z-index: 1;
+    }
+    &:before {
+        background: linear-gradient(to bottom, $color-contessa 0%, rgba($color-contessa, 0) 100%);
+        top: 0;
+    }
+    &:after {
+        background: linear-gradient(to top, $color-contessa 0%, rgba($color-contessa, 0) 100%);
+        bottom: 0;
+    }
+}
+.home_wrapper  {}
+.home_titles {
+    @extend %vertical-titles;
+}
+.home_titles_label {
+    @extend %vertical-titles_label;
+}
+.home_titles_title {
+    @extend %vertical-titles_title;
+    
+}
+.home_gallery {
+    @extend %cover;
+
+    visibility: hidden;
+}
+.home_gallery_media  {
+    position: absolute;
+}
+.home_gallery_media_image {}
+.home_link {
+    @extend %description-14;
+
+    align-items: center;
+    display: flex;
+    letter-spacing: 0.1rem;
+    height: 6rem;
+    justify-content: center;
+    width: 28.8rem;
+    position: absolute;
+    bottom: 5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    text-transform: uppercase;
+    z-index: 2;
+
+    @include media('<=phone') {
+        bottom: 7.5rem;
+        height: 13.7rem;
+        width: 55rem;
+    }
+}
+
+.home_link_icon {
+    @extend %cover;
+}

@@ -1,0 +1,21 @@
+block variables
+doctype html 
+html(lang="en")
+    head 
+        meta(charset="UTF-8")
+        meta(name="viewport" content="width=device-width, initial-scale=1.0")
+
+        base(href="/")
+
+        title webGL
+
+        meta(name="decription" content="Floema beautiful jewelery")
+
+        link(href="main.css" rel="stylesheet")
+
+    body
+       include ./partials/preloader
+       include ./partials/navigation
+
+       .content#content(data-template=template)
+            block content

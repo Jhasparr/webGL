@@ -1,0 +1,21 @@
+extends ../base.pug 
+
+block variables 
+  - var template = 'home'
+
+block content
+  .home
+    .home_wrapper 
+      .home_titles
+        each collection, index in collections 
+          .home_titles_label=`${home.data.collection} ${Numbers(index)}`
+          .home_titles_title=collection.data.title
+          
+      .home_gallery
+        each media in home.data.gallery 
+          figure.home_gallery_media 
+            img.home_gallery_media_image(alt=media.image.alt src=media.image.url)
+
+      a.home_link(href=Link(home.data.collections))=home.data.button
+        svg.home_link_icon(xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 60")
+          path(fill="none" d="M144 0.5C183.741 0.5 219.705 3.8563 245.722 9.27637C258.734 11.9872 269.231 15.2094 276.463 18.7715C280.08 20.553 282.854 22.4074 284.718 24.3047C286.58 26.2003 287.5 28.1033 287.5 30C287.5 31.8967 286.58 33.7997 284.718 35.6953C282.854 37.5926 280.08 39.447 276.463 41.2285C269.231 44.7906 258.734 48.0128 245.722 50.7236C219.705 56.1437 183.741 59.5 144 59.5C104.259 59.5 68.2946 56.1437 42.2783 50.7236C29.2662 48.0128 18.769 44.7906 11.5371 41.2285C7.92022 39.447 5.1458 37.5926 3.28223 35.6953C1.42039 33.7997 0.5 31.8967 0.5 30C0.5 28.1033 1.42039 26.2003 3.28223 24.3047C5.1458 22.4074 7.92022 20.553 11.5371 18.7715C18.769 15.2094 29.2662 11.9872 42.2783 9.27637C68.2946 3.8563 104.259 0.5 144 0.5Z" stroke="currentColor")

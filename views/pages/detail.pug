@@ -1,0 +1,47 @@
+extends ../base.pug 
+block variables 
+    - var template = 'detail'
+
+block content
+    .detail
+        .detail_wrapper
+            figure.detail_media
+                img.detail_media_image(alt=product.data.image.alt src=product.data.image.url)
+        
+            .detail_information
+                p.detail_information_collection=product.data.collection.data.title
+
+                h1.detail_information_title=product.data.title
+
+                .detail_information_content
+                    .detail_information_highlights
+                        each highlight in product.data.highlights
+                            p.detail_information_highlight
+                                if highlight.highlight_icons.toLowerCase() == 'arrow'
+                                    svg.detail_information_highlight_icon(viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg")
+                                        
+                                        path(fill="none" d="M20 0.5C30.7696 0.5 39.5 9.23045 39.5 20C39.5 30.7696 30.7696 39.5 20 39.5C9.23045 39.5 0.5 30.7696 0.5 20C0.5 9.23045 9.23045 0.5 20 0.5Z" stroke="currentColor")
+                                        line(fill="none" x1="13.8428" y1="20.4559" x2="27.8428" y2="20.4559" stroke="currentColor" stroke-width="2" stroke-linecap="round")
+                                else 
+                                    svg.detail_information_highlight_icon(viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg")
+                                        circle(fill="none" cx="20" cy="20" r="19.5" stroke="currentColor")
+                                        path(d="M24.2648 9.87057L21.5054 18.4633L30.2236 15.8289L22.0694 19.9688L30.2236 24.2335L21.5054 21.4114L24.3275 30.3178L20.0622 21.976L15.9229 30.1297L18.5568 21.4114L9.96402 24.1708L18.1182 19.9688L9.77637 15.6407L18.5568 18.4633L15.7347 9.68188L20.0622 18.0243L24.2648 9.87057Z" fill="currentColor")
+
+                                span.detail_information_highlight_text!=highlight.highlight_text.replace(/\n/, '<br>')
+                
+                    .detail_information_list
+                        each item in product.data.information
+                            p.detail_information_item
+                                strong.detail_information_item_title=item.informations_label
+                                span.detail_information_item_description=item.informations_description
+            
+                    a.detail_information_link(href=product.data.link_url.url target="_blank")=product.data.link_text
+
+        button.detail_button Close
+            svg.detail_button_icon(viewBox="0 0 124 60" xmlns="http://www.w3.org/2000/svg")
+                
+                path(fill="none" d="M62 0.5C79.0623 0.5 94.4849 3.84786 105.623 9.2373C116.796 14.6436 123.5 22.0159 123.5 30C123.5 37.9841 116.796 45.3564 105.623 50.7627C94.4849 56.1521 79.0623 59.5 62 59.5C44.9377 59.5 29.5151 56.1521 18.377 50.7627C7.20419 45.3564 0.5 37.9841 0.5 30C0.5 22.0159 7.20419 14.6436 18.377 9.2373C29.5151 3.84786 44.9377 0.5 62 0.5Z" stroke="currentColor")
+
+
+
+                            
