@@ -99,6 +99,24 @@ class App {
     }
   }
 
+  onTouchDown (event) {
+    if (this.canvas && this.canvas.onTouchDown) {
+      this.canvas.onTouchDown(event)
+    }
+  }
+
+  onTouchMove (event) {
+    if (this.canvas && this.canvas.onTouchMove) {
+      this.canvas.onTouchMove(event)
+    }
+  }
+
+  onTouchUp (event) {
+    if (this.canvas && this.canvas.onTouchUp) {
+      this.canvas.onTouchUp(event)
+    }
+  }
+
   /* Loop */
   update () {
     if (this.canvas && this.canvas.update) {
@@ -113,6 +131,14 @@ class App {
 
   /* Listeners */
   addEventListeners () {
+    window.addEventListener('mousedown', this.onTouchDown.bind(this))
+    window.addEventListener('mousemove', this.onTouchMove.bind(this))
+    window.addEventListener('mouseup', this.onTouchUp.bind(this))
+
+    window.addEventListener('touchstart', this.onTouchDown.bind(this))
+    window.addEventListener('touchmove', this.onTouchMove.bind(this))
+    window.addEventListener('touchend', this.onTouchUp.bind(this))
+
     window.addEventListener('resize', this.onResize.bind(this))
   }
 

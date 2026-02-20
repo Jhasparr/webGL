@@ -30,6 +30,10 @@ module.exports = {
         {
           from: './shared',
           to: ''
+        },
+        {
+          from: './fonts',
+          to: 'fonts'
         }
       ]
     }),
@@ -77,7 +81,10 @@ module.exports = {
             }
           },
           {
-            loader: 'css-loader'
+            loader: 'css-loader',
+            options: {
+              url: false
+            }
           },
           {
             loader: 'postcss-loader'
