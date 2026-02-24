@@ -41,7 +41,7 @@
     @extend %cover;
 
     height: 172.5rem;
-    width: 241.8rem;
+    width: 241.8rem + 9rem;
 
     visibility: hidden;
     }
@@ -156,6 +156,7 @@
    
 }
 .home_gallery_media_image {
+    @extend %cover;
     opacity: 1;
 }
 .home_link {

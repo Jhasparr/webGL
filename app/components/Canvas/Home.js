@@ -2,14 +2,15 @@ import Media from './Media'
 import { Plane, Transform } from 'ogl'
 import map from 'lodash/map'
 import GSAP from 'gsap'
-import { lerp } from 'utils/math'
 
 export default class {
   constructor ({ gl, scene, sizes }) {
     this.gl = gl
+    this.scene = scene
     this.sizes = sizes
 
     this.group = new Transform()
+    this.galleryElement = document.querySelector('.home_gallery')
     this.mediasElements = document.querySelectorAll('.home_gallery_media_image')
 
     this.createGeometry()
@@ -58,6 +59,14 @@ export default class {
 
   onResize (event) {
     map(this.medias, media => media.onResize(event))
+    this.galleryBounds = this.galleryElement.getBoundingClientRect()
+
+    this.sizes = event.sizes
+
+    this.gallerySizes = {
+      height: this.galleryBounds.height / window.innerHeight * this.sizes.height,
+      width: this.galleryBounds.width / window.innerWidth * this.sizes.width
+    }
   }
 
   onTouchDown ({ x, y }) {
@@ -70,8 +79,6 @@ export default class {
     const yDistance = y.start - y.end
     this.x.target = this.scrollCurrent.x - xDistance
     this.y.target = this.scrollCurrent.y - yDistance
-
-    console.log(this.x.target, this.y.target)
   }
 
   onTouchUp ({ x, y }) {
@@ -80,14 +87,55 @@ export default class {
 
   /* Update */
   update () {
+    if (!this.galleryBounds) return
     this.x.current = GSAP.utils.interpolate(this.x.current, this.x.target, this.x.lerp)
     this.y.current = GSAP.utils.interpolate(this.y.current, this.y.target, this.y.lerp)
 
-    console.log(this.x.current, this.y.current)
+    if (this.scroll.x < this.x.current) {
+      this.x.direction = 'right'
+    } else if (this.scroll.x > this.x.current) {
+      this.x.direction = 'left'
+    }
+
+    if (this.scroll.y < this.y.current) {
+      this.y.direction = 'top'
+    } else if (this.scroll.y > this.y.current) {
+      this.y.direction = 'bottom'
+    }
 
     this.scroll.x = this.x.current
     this.scroll.y = this.y.current
-    map(this.medias, media => {
+    map(this.medias, (media, index) => {
+      const scaleX = media.mesh.scale.x / 2
+
+      if (this.x.direction === 'left') {
+        const x = media.mesh.position.x + scaleX
+        if (x < -this.sizes.width / 2) {
+          media.extra.x += this.gallerySizes.width
+        }
+      } else if (this.x.direction === 'right') {
+        const x = media.mesh.position.x - scaleX
+        if (x > this.sizes.width / 2) {
+          media.extra.x -= this.gallerySizes.width
+        }
+      }
+
+      /* Y-Direction */
+
+      const scaleY = media.mesh.scale.y
+
+      if (this.y.direction === 'top') {
+        const y = media.mesh.position.y + scaleY
+        if (y < -this.sizes.height / 2) {
+          media.extra.y += this.gallerySizes.height
+        }
+      } else if (this.y.direction === 'bottom') {
+        const y = media.mesh.position.y - scaleY
+        if (y > this.sizes.height / 2) {
+          media.extra.y -= this.gallerySizes.height
+        }
+      }
+
       media.update(this.scroll)
     })
   }
