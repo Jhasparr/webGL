@@ -13,10 +13,10 @@ block content
 
       .collections_gallery 
         .collections_gallery_wrapper
-          each collection in collections 
+          each collection, index in collections 
             each product in collection.data.products 
               a.collections_gallery_link(href=Link(product.products_product))
-                figure.collections_gallery_media 
+                figure.collections_gallery_media(data-index=index) 
                   img.collections_gallery_media_image(alt=product.products_product.data.image.alt data-src=product.products_product.data.image.url)
     
       .collections_content
