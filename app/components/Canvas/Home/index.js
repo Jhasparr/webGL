@@ -13,11 +13,6 @@ export default class {
     this.galleryElement = document.querySelector('.home_gallery')
     this.mediasElements = document.querySelectorAll('.home_gallery_media_image')
 
-    this.createGeometry()
-    this.createGallery()
-
-    this.group.setParent(scene)
-
     this.x = {
       current: 0,
       target: 0,
@@ -38,6 +33,13 @@ export default class {
     this.scroll = {
       x: 0, y: 0
     }
+
+    this.createGeometry()
+    this.createGallery()
+
+    this.group.setParent(this.scene)
+
+    this.show()
   }
 
   createGeometry () {
@@ -57,6 +59,16 @@ export default class {
     })
   }
 
+  /* Animations */
+  show () {
+    map(this.medias, media => media.show())
+  }
+
+  hide () {
+    map(this.medias, media => media.hide())
+  }
+
+  /* Events */
   onResize (event) {
     this.galleryBounds = this.galleryElement.getBoundingClientRect()
 
@@ -149,5 +161,10 @@ export default class {
 
       media.update(this.scroll)
     })
+  }
+
+  /* Destroy */
+  destroy () {
+    this.scene.removeChild(this.group)
   }
 }
