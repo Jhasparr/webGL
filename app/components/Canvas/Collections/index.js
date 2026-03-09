@@ -1,6 +1,7 @@
 import Media from './Media'
 import { Plane, Transform } from 'ogl'
 import map from 'lodash/map'
+import Prefix from 'prefix'
 import GSAP from 'gsap'
 
 export default class {
@@ -9,8 +10,13 @@ export default class {
     this.scene = scene
     this.sizes = sizes
 
+    this.transformPrefix = Prefix('transform')
+
     this.group = new Transform()
-    this.galleryElement = document.querySelector('.collections_gallery_wrapper')
+    this.galleryElement = document.querySelector('.collections_gallery')
+    this.galleryWrapperElement = document.querySelector('.collections_gallery_wrapper')
+
+    this.titlesElement = document.querySelector('.collections_titles')
     this.collectionsElements = document.querySelectorAll('.collections_article')
     this.collectionsElementsActive = 'collections_article--active'
     this.mediasElements = document.querySelectorAll('.collections_gallery_media')
@@ -61,7 +67,7 @@ export default class {
   onResize (event) {
     this.sizes = event.sizes
 
-    this.bounds = this.galleryElement.getBoundingClientRect()
+    this.bounds = this.galleryWrapperElement.getBoundingClientRect()
 
     this.scroll.last = this.scroll.target = 0
 
@@ -100,6 +106,7 @@ export default class {
         element.classList.remove(this.collectionsElementsActive)
       }
     })
+    this.titlesElement.style[this.transformPrefix] = `translateY(-${25 * selectedCollection}%) translate(-50%, -50%) rotate(-90deg)`
   }
 
   /* Update */
@@ -109,6 +116,8 @@ export default class {
     this.scroll.target = GSAP.utils.clamp(-this.scroll.limit, 0, this.scroll.target)
 
     this.scroll.current = GSAP.utils.interpolate(this.scroll.current, this.scroll.target, this.scroll.lerp)
+
+    this.galleryElement.style[this.transformPrefix] = `translateX(${this.scroll.current}px)`
 
     if (this.scroll.last < this.scroll.current) {
       this.scroll.direction = 'right'

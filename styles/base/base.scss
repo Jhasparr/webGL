@@ -33,6 +33,11 @@ a {
     color: inherit;
 }
 
+canvas {
+    pointer-events: none;
+    position: relative;
+}
+
 button {
     color: inherit;
     background: none;
