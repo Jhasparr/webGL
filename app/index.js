@@ -75,6 +75,8 @@ class App {
       const text = await request.text()
       const div = document.createElement('div')
 
+      window.history.pushState({}, '', url)
+
       div.innerHTML = text
 
       const divContent = div.querySelector('.content')

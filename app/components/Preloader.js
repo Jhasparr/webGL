@@ -51,7 +51,6 @@ export default class Preloader extends Component {
       }
 
       window.TEXTURES[image] = texture
-      console.log(image)
     })
   }
 
