@@ -5,10 +5,13 @@ import Prefix from 'prefix'
 import GSAP from 'gsap'
 
 export default class {
-  constructor ({ gl, scene, sizes }) {
+  constructor ({ gl, scene, sizes, transition }) {
+    this.id = 'collections'
+
     this.gl = gl
     this.scene = scene
     this.sizes = sizes
+    this.transition = transition
 
     this.transformPrefix = Prefix('transform')
 
@@ -31,6 +34,10 @@ export default class {
 
     this.createGeometry()
     this.createGallery()
+
+    this.onResize({
+      sizes: this.sizes
+    })
 
     this.group.setParent(this.scene)
 
@@ -56,6 +63,11 @@ export default class {
 
   /* Animations */
   show () {
+    if (this.transition) {
+      this.transition.animate(this.medias[0].mesh, _ => {
+      })
+    }
+
     map(this.medias, media => media.show())
   }
 
@@ -98,7 +110,6 @@ export default class {
 
     const selectedCollection = parseInt(this.mediasElements[this.index].getAttribute('data-index'))
 
-    console.log(selectedCollection)
     map(this.collectionsElements, (element, elementIndex) => {
       if (elementIndex === selectedCollection) {
         element.classList.add(this.collectionsElementsActive)
@@ -111,8 +122,6 @@ export default class {
 
   /* Update */
   update () {
-    if (!this.bounds) return
-
     this.scroll.target = GSAP.utils.clamp(-this.scroll.limit, 0, this.scroll.target)
 
     this.scroll.current = GSAP.utils.interpolate(this.scroll.current, this.scroll.target, this.scroll.lerp)
@@ -127,15 +136,17 @@ export default class {
 
     this.scroll.last = this.scroll.current
 
-    map(this.medias, (media, index) => {
-      media.update(this.scroll.current)
-    })
-
     const index = Math.floor(Math.abs(this.scroll.current / this.scroll.limit) * this.medias.length)
 
     if (this.index !== index) {
       this.onChange(index)
     }
+
+    map(this.medias, (media, index) => {
+      media.update(this.scroll.current, this.index)
+
+      media.mesh.position.y += Math.cos((media.mesh.position.x / this.sizes.width) * Math.PI * 0.1) * 40 - 40
+    })
   }
 
   /* Destroy */

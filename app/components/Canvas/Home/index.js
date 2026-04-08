@@ -42,6 +42,7 @@ export default class {
 
     this.createGeometry()
     this.createGallery()
+    this.onResize({ sizes: this.sizes })
 
     this.group.setParent(this.scene)
 
@@ -116,8 +117,6 @@ export default class {
 
   /* Update */
   update () {
-    if (!this.galleryBounds) return
-
     this.speed.current = GSAP.utils.interpolate(this.speed.current, this.speed.target, this.speed.lerp)
 
     this.x.current = GSAP.utils.interpolate(this.x.current, this.x.target, this.x.lerp)

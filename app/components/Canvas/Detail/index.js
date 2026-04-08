@@ -1,32 +1,31 @@
-import { Mesh, Program } from 'ogl'
+import { Mesh, Plane, Program } from 'ogl'
 import GSAP from 'gsap'
 import vertex from '../../../shaders/plane-vertex.glsl'
 import fragment from '../../../shaders/plane-fragment.glsl'
 
 export default class {
-  constructor ({ element, geometry, gl, index, scene, sizes }) {
-    this.element = element
-    this.geometry = geometry
+  constructor ({ gl, scene, sizes, transition }) {
+    this.id = 'detail'
+    this.element = document.querySelector('.detail_media_image')
     this.gl = gl
     this.scene = scene
-    this.index = index
     this.sizes = sizes
+    this.transition = transition
 
-    this.extra = {
-      x: 0,
-      y: 0
-    }
+    this.geometry = new Plane(this.gl)
 
     this.createTexture()
     this.createProgram()
     this.createMesh()
     this.createBounds({ sizes: this.sizes })
+
+    this.show()
   }
 
   createTexture () {
-    const image = this.element.querySelector('img')
+    const image = this.element.getAttribute('data-src')
 
-    this.texture = window.TEXTURES[image.getAttribute('data-src')]
+    this.texture = window.TEXTURES[image]
   }
 
   createProgram () {
@@ -60,38 +59,41 @@ export default class {
 
   /* Animations */
   show () {
-    GSAP.fromTo(this.program.uniforms.uAlpha, {
-      value: 0
-    }, {
-      value: 1
-    })
+    if (this.transition) {
+      this.transition.animate(this.mesh, _ => {
+        this.program.uniforms.uAlpha.value = 1
+      })
+    } else {
+      GSAP.to(this.program.uniforms.uAlpha, {
+        value: 1
+      })
+    }
   }
 
   hide () {
-    GSAP.to(this.program.uniforms.uAlpha, {
-      value: 0
-    })
+
   }
 
   /* Events */
-  onResize ({ scroll, sizes }) {
-    this.extra = 0
+  onResize ({ sizes }) {
     this.createBounds({ sizes })
-    this.update(scroll)
-    this.updateY(0)
+    this.updateX()
+    this.updateY()
+  }
+
+  onTouchDown () {
+
+  }
+
+  onTouchMove () {
+
+  }
+
+  onTouchUp () {
+
   }
 
   /* Loop */
-  updateRotation () {
-    this.mesh.rotation.z = GSAP.utils.mapRange(
-      -this.sizes.width / 2,
-      this.sizes.width / 2,
-      Math.PI * 0.1,
-      -Math.PI * 0.1,
-      this.mesh.position.x
-    )
-  }
-
   updateScale () {
     this.height = this.bounds.height / window.innerHeight
 
@@ -101,23 +103,25 @@ export default class {
     this.mesh.scale.y = this.sizes.height * this.height
   }
 
-  updateX (x = 0) {
-    this.x = (this.bounds.left + x) / window.innerWidth
+  updateX () {
+    this.x = (this.bounds.left) / window.innerWidth
 
-    this.mesh.position.x = (-this.sizes.width / 2) + (this.mesh.scale.x / 2) + (this.x * this.sizes.width) + this.extra
+    this.mesh.position.x = (-this.sizes.width / 2) + (this.mesh.scale.x / 2) + (this.x * this.sizes.width)
   }
 
-  updateY (y = 0) {
-    this.y = (this.bounds.top + y) / window.innerHeight
+  updateY () {
+    this.y = (this.bounds.top) / window.innerHeight
 
     this.mesh.position.y = (this.sizes.height / 2) - (this.mesh.scale.y / 2) - (this.y * this.sizes.height)
-    this.mesh.position.y += Math.cos((this.mesh.position.x / this.sizes.width) * Math.PI * 0.1) * 40 - 40
   }
 
-  update (scroll) {
-    this.updateRotation()
-    this.updateScale()
-    this.updateX(scroll)
-    this.updateY(0)
+  update () {
+    this.updateX()
+    this.updateY()
+  }
+
+  /* Destroy */
+  destroy () {
+    this.scene.removeChild(this.mesh)
   }
 }
