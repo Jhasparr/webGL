@@ -1,7 +1,8 @@
 const path = require('path')
+
 const webpack = require('webpack')
 
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
@@ -10,14 +11,16 @@ const TerserPlugin = require('terser-webpack-plugin')
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'dev'
 
 const dirApp = path.join(__dirname, 'app')
+const dirAssets = path.join(__dirname, 'assets')
 const dirShared = path.join(__dirname, 'shared')
 const dirStyles = path.join(__dirname, 'styles')
 const dirNode = 'node_modules'
 
 module.exports = {
   entry: [path.join(dirApp, 'index.js'), path.join(dirStyles, 'index.scss')],
+
   resolve: {
-    modules: [dirApp, dirShared, dirStyles, dirNode]
+    modules: [dirApp, dirAssets, dirShared, dirStyles, dirNode]
   },
 
   plugins: [
@@ -25,35 +28,27 @@ module.exports = {
       IS_DEVELOPMENT
     }),
 
-    new CopyWebpackPlugin({
+    new CopyPlugin({
       patterns: [
         {
           from: './shared',
           to: ''
-        },
-        {
-          from: './fonts',
-          to: 'fonts'
         }
       ]
     }),
 
     new MiniCssExtractPlugin({
-      filename: '[name].css',
-      chunkFilename: '[id].css'
+      filename: '[name].css'
     }),
 
     new ImageMinimizerPlugin({
       minimizer: {
-        implementation: ImageMinimizerPlugin.imageminMinify,
+        implementation: ImageMinimizerPlugin.imageminMinify, // This is required in v4
         options: {
-          // Lossless optimization with custom option
-          // Feel free to experiment with options for better results
           plugins: [
             ['gifsicle', { interlaced: true }],
             ['jpegtran', { progressive: true }],
             ['optipng', { optimizationLevel: 8 }]
-            // SVGO configuration here https://github.com/svg/svgo#configuration
           ]
         }
       }
@@ -80,51 +75,41 @@ module.exports = {
               publicPath: ''
             }
           },
+
           {
-            loader: 'css-loader',
-            options: {
-              url: false
-            }
+            loader: 'css-loader'
           },
+
           {
             loader: 'postcss-loader'
           },
+
           {
             loader: 'sass-loader'
           }
         ]
       },
+
       {
-        test: /\.(jpe?g|png|gif|svg|woff2?|fnt|webp)$/,
-        loader: 'file-loader',
-        options: {
-          // outputPath: 'images',
-          name (file) {
-            return '[hash].[ext]'
-          }
+        test: /\.(png|jpg|gif|jpe?g|svg|woff2?|fnt|webp|mp4)$/,
+        type: 'asset/resource',
+        generator: {
+          filename: '[name].[hash].[ext]'
         }
       },
+
       {
         test: /\.(jpe?g|png|gif|svg|webp)$/i,
         use: [
           {
             loader: ImageMinimizerPlugin.loader
-            /*   options: {
-              severityError: "warning",
-              minimizer: {
-                implementation: ImageMinimizerPlugin.imageminMinify,
-                options: {
-                  plugins: ["gifsicle"],
-                },
-              },
-            }, */
           }
         ]
       },
 
       {
         test: /\.(glsl|frag|vert)$/,
-        loader: 'raw-loader',
+        type: 'asset/source', // replaced raw-loader
         exclude: /node_modules/
       },
 
