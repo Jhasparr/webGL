@@ -1,23 +1,22 @@
 {
   "version": 2,
-  "buildCommand": "npm start",
-  "outputDirectory": "public",
+  "buildCommand": "npm run frontend:build",
   "routes": [
     {
       "src": "/main.css",
-      "dest": "/main.css"
+      "dest": "/public/main.css"
     },
     {
       "src": "/main.js",
-      "dest": "/main.js"
+      "dest": "/public/main.js"
     },
     {
       "src": "/fonts/(.*)",
-      "dest": "/fonts/$1"
+      "dest": "/public/fonts/$1"
     },
     {
       "src": "/(.*\\.(png|jpg|gif|svg|webp|woff2?|ico))",
-      "dest": "/$1"
+      "dest": "/public/$1"
     },
     {
       "src": "/(.*)",
