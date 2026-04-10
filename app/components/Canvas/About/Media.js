@@ -1,5 +1,6 @@
 import { Mesh, Program } from 'ogl'
 import GSAP from 'gsap'
+import DetectionManager from '../../../classes/Detection'
 import vertex from '../../../shaders/plane-vertex.glsl'
 import fragment from '../../../shaders/plane-fragment.glsl'
 
@@ -110,8 +111,10 @@ export default class {
   updateY (y = 0) {
     this.y = (this.bounds.top + y) / window.innerHeight
 
+    const extra = DetectionManager.isPhone() ? 10 : 40
+
     this.mesh.position.y = (this.sizes.height / 2) - (this.mesh.scale.y / 2) - (this.y * this.sizes.height)
-    this.mesh.position.y += Math.cos((this.mesh.position.x / this.sizes.width) * Math.PI * 0.1) * 40 - 40
+    this.mesh.position.y += Math.cos((this.mesh.position.x / this.sizes.width) * Math.PI * 0.1) * extra - extra
   }
 
   update (scroll) {

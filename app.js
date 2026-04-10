@@ -9,6 +9,7 @@ const logger = require('morgan')
 const app = express()
 const path = require('path')
 const port = 3000
+const UAParser = require('ua-parser-js')
 
 app.use(errorHandler())
 app.use(logger('dev'))
@@ -43,6 +44,14 @@ const handleLinkResolver = (doc) => {
 }
 
 app.use((req, res, next) => {
+  const ua = UAParser(req.headers['user-agent'])
+
+  res.locals.isDesktop = ua.device.type === undefined
+  res.locals.isPhone = ua.device.type === 'mobile'
+  res.locals.isTablet = ua.device.type === 'tablet'
+
+  console.log(res.locals.isDesktop, res.locals.isPhone, res.locals.isTablet)
+
   res.locals.Link = handleLinkResolver
 
   res.locals.Numbers = index => {

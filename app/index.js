@@ -66,7 +66,11 @@ class App {
     this.page.show()
   }
 
-  async onChange (url) {
+  onPopState () {
+    this.onChange({ url: window.location.pathname, push: false })
+  }
+
+  async onChange ({ url, push = true }) {
     this.canvas.onChangeStart(this.template, url)
     await this.page.hide()
     const request = await window.fetch(url)
@@ -75,7 +79,9 @@ class App {
       const text = await request.text()
       const div = document.createElement('div')
 
-      window.history.pushState({}, '', url)
+      if (push) {
+        window.history.pushState({}, '', url)
+      }
 
       div.innerHTML = text
 
@@ -155,6 +161,7 @@ class App {
 
   /* Listeners */
   addEventListeners () {
+    window.addEventListener('popstate', this.onPopState.bind(this))
     window.addEventListener('mousewheel', this.onWheel.bind(this))
 
     window.addEventListener('mousedown', this.onTouchDown.bind(this))
@@ -177,7 +184,7 @@ class App {
 
         const { href } = link
 
-        this.onChange(href)
+        this.onChange({ url: href })
       }
     })
   }
