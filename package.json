@@ -4,11 +4,12 @@
   "license": "ISC",
   "author": "Ezepue James",
   "scripts": {
-    "backend:build": "node app.js",
-    "backend:development": "nodemon app.js",
-    "start": "concurrently --kill-others \"npm run backend:development\" \"npm run frontend:development\"",
-    "frontend:development": "webpack serve --progress --config webpack.config.development.js",
-    "frontend:build": "webpack  --progress --config webpack.config.build.js"
+  "build": "npm run frontend:build", 
+  "start": "node app.js",
+  "frontend:build": "webpack --progress --config webpack.config.build.js",
+  "frontend:development": "webpack serve --progress --config webpack.config.development.js",
+  "backend:development": "nodemon app.js",
+  "dev": "concurrently --kill-others \"npm run backend:development\" \"npm run frontend:development\""
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
