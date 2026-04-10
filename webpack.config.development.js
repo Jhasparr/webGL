@@ -1,5 +1,5 @@
-const path = require('path')
 const { merge } = require('webpack-merge')
+const path = require('path')
 
 const config = require('./webpack.config')
 
@@ -13,10 +13,7 @@ module.exports = merge(config, {
       writeToDisk: true
     }
   },
-
   output: {
-    path: path.resolve(__dirname, 'public'),
-    assetModuleFilename: '[name][ext]',
-    clean: true
+    path: path.resolve(__dirname, 'public')
   }
 })
