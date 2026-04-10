@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm run frontend:build",
+  "buildCommand": "npm start",
   "outputDirectory": "public",
   "routes": [
     {
